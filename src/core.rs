@@ -1,2 +1,2 @@
-// pub mod countdown;
+pub mod countdown;
 pub mod stopwatch;

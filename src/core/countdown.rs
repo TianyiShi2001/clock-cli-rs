@@ -47,34 +47,12 @@ impl Timer {
             self.pause();
         }
     }
-    pub fn lap(&mut self) -> Option<Duration> {
-        // assert!(!self.paused, "Paused!");
-        if self.paused {
-            None
-        } else {
-            let moment = Local::now();
-            let lap = self.read_lap_elapsed(moment);
-            self.lap_moments.push(moment);
-            self.laps.push(lap);
-            self.lap_elapsed = Duration::zero();
-            Some(lap)
-        }
-    }
     /// Read the total time elapsed
     pub fn read(&self) -> Duration {
         if self.paused {
-            self.elapsed
+            self.remaining
         } else {
-            self.elapsed + (Local::now() - self.last_start())
+            self.remaining - (Local::now() - self.last_start())
         }
-    }
-    /// Read the time elapsed in the current lap
-    pub fn read_lap_elapsed(&self, moment: DateTime<Local>) -> Duration {
-        self.lap_elapsed
-            + if self.lap_elapsed == Duration::zero() && !self.lap_moments.is_empty() {
-                moment - self.last_lap()
-            } else {
-                moment - self.last_start()
-            }
     }
 }
