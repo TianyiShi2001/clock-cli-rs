@@ -26,3 +26,10 @@ clock
 
 to launch the stopwatch.
 
+# Compatibility
+
+Currently only works on Linux and MacOS.
+
+# Acknowledgement
+
+The TUI is based on the [**cursive**](https://github.com/gyscos/cursive) crate made by [Alexandre Bury (@glycos)](https://github.com/gyscos), who also helped me a lot during the development of this crate (see [glycose/cursive/#503](https://github.com/gyscos/cursive/pull/503))
