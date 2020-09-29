@@ -25,6 +25,10 @@ simply run:
 clock
 ```
 
+- Press `Space` to pause/resume.
+- Press `l` to lap.
+- Press `return` to finish.
+
 ## Countdown Timer:
 
 Specify the duration (in natual language) to run a countdown.
@@ -37,7 +41,8 @@ clock 4h3m
 clock 1 day
 ```
 
-to launch the stopwatch.
+- Press `Space` to pause/resume.
+- Press `return` to cancel.
 
 # Compatibility
 

@@ -28,11 +28,6 @@ impl StopWatchView {
         self
     }
 
-    /// Sets a callback to be used when `<Enter>` is pressed.
-    ///
-    /// The elapsed time will be given to the callback.
-    ///
-    /// See also cursive::views::select_view::SelectView::set_on_submit
     pub fn set_on_stop<F, R>(&mut self, cb: F)
     where
         F: 'static + Fn(&mut Cursive, StopWatch) -> R,
