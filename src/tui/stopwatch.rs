@@ -17,7 +17,7 @@
 
 use crate::utils::PrettyDuration;
 // use chrono::{DateTime, Duration, Local};
-use crate::core::stopwatch::StopWatch;
+use clock_core::stopwatch::{Stopwatch, StopwatchData};
 use cursive::{
     event::{Callback, Event, EventResult, Key},
     view::View,
@@ -25,16 +25,16 @@ use cursive::{
 };
 use std::rc::Rc;
 
-pub struct StopWatchView {
-    stopwatch: StopWatch,
-    on_stop: Option<Rc<dyn Fn(&mut Cursive, StopWatch)>>,
+pub struct StopwatchView {
+    stopwatch: Stopwatch,
+    on_stop: Option<Rc<dyn Fn(&mut Cursive, StopwatchData)>>,
     show_laps: usize,
 }
 
-impl StopWatchView {
+impl StopwatchView {
     pub fn new() -> Self {
         Self {
-            stopwatch: StopWatch::new(),
+            stopwatch: Stopwatch::new(),
             on_stop: None,
             show_laps: 0,
         }
@@ -47,7 +47,7 @@ impl StopWatchView {
 
     pub fn set_on_stop<F, R>(&mut self, cb: F)
     where
-        F: 'static + Fn(&mut Cursive, StopWatch) -> R,
+        F: 'static + Fn(&mut Cursive, StopwatchData) -> R,
     {
         self.on_stop = Some(Rc::new(move |s, t| {
             cb(s, t);
@@ -56,37 +56,31 @@ impl StopWatchView {
 
     pub fn on_stop<F, R>(self, cb: F) -> Self
     where
-        F: 'static + Fn(&mut Cursive, StopWatch) -> R,
+        F: 'static + Fn(&mut Cursive, StopwatchData) -> R,
     {
         self.with(|s| s.set_on_stop(cb))
     }
 
     fn stop(&mut self) -> EventResult {
-        let stopwatch = &mut self.stopwatch;
-        if stopwatch.paused {
-            stopwatch.resume(); // to record the last lap
-        }
-        stopwatch.lap();
-        stopwatch.pause();
-        let stopwatch = std::mem::replace(stopwatch, StopWatch::new()); // reset the stopwatch data, but not other configurations related to the `View`
+        let data = self.stopwatch.stop();
         if self.on_stop.is_some() {
             let cb = self.on_stop.clone().unwrap();
-            EventResult::Consumed(Some(Callback::from_fn_once(move |s| cb(s, stopwatch))))
+            EventResult::Consumed(Some(Callback::from_fn_once(move |s| cb(s, data))))
         } else {
             EventResult::Consumed(None)
         }
     }
 }
-impl View for StopWatchView {
+impl View for StopwatchView {
     fn draw(&self, printer: &Printer) {
         printer.print((4, 0), &self.stopwatch.read().pretty());
-        let len = self.stopwatch.laps.len();
+        let len = self.stopwatch.data.laps.len();
         for i in 1..=std::cmp::min(len, self.show_laps) {
             printer.print(
                 (0, i),
                 &[
                     format!("Lap {:02}: ", len - i + 1),
-                    self.stopwatch.laps[len - i].pretty(),
+                    self.stopwatch.data.laps[len - i].pretty(),
                 ]
                 .concat(),
             );

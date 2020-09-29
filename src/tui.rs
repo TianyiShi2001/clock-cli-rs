@@ -17,15 +17,18 @@
 
 mod countdown;
 mod stopwatch;
-use crate::core::{countdown::Timer, stopwatch::StopWatch};
 use crate::utils::PrettyDuration;
+use clock_core::{
+    stopwatch::{Stopwatch, StopwatchData},
+    timer::Timer,
+};
 use countdown::TimerView;
 use cursive::{traits::*, views::Dialog, Cursive};
-use stopwatch::StopWatchView;
+use stopwatch::StopwatchView;
 
 pub fn stopwatch() {
     let mut siv = cursive::default();
-    let stopwatch = StopWatchView::new();
+    let stopwatch = StopwatchView::new();
     siv.add_layer(
         stopwatch
             .with_laps(8)
@@ -36,7 +39,7 @@ pub fn stopwatch() {
     siv.run();
 }
 
-fn summarize(stopwatch: &StopWatch) -> String {
+fn summarize(stopwatch: &StopwatchData) -> String {
     let elapsed = stopwatch.elapsed;
     let average = stopwatch.elapsed / stopwatch.laps.len() as i32;
     let max = stopwatch.laps.iter().max().unwrap();

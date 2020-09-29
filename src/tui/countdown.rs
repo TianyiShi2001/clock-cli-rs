@@ -27,8 +27,8 @@
 
 use crate::utils::PrettyDuration;
 // use chrono::{DateTime, Duration, Local};
-use crate::core::countdown::Timer;
 use chrono::Duration;
+use clock_core::timer::Timer;
 use cursive::{
     event::{Callback, Event, EventResult, Key, MouseEvent},
     theme::ColorStyle,
