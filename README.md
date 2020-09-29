@@ -6,7 +6,8 @@ Command line clock utilities, with TUI interfaces, implemented in Rust. Currentl
   - start/pause/stop: ✅
   - lap time (similar to iOS's stopwatch's behaviour): ✅
   - report of all pause/start/lap instances (moments): WIP
-- (Countdown) Timer: WIP
+- (Countdown) Timer
+  - basics: ✅
 
 # Installation
 
@@ -16,12 +17,24 @@ Other installation methods: WIP
 
 # Usage
 
-Stopwatch:
+## Stopwatch:
 
 simply run:
 
 ```
 clock
+```
+
+## Countdown Timer:
+
+Specify the duration (in natual language) to run a countdown.
+
+Examples:
+
+```
+clock 3 minutes
+clock 4h3m
+clock 1 day
 ```
 
 to launch the stopwatch.

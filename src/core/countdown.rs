@@ -4,8 +4,9 @@ use chrono::{DateTime, Duration, Local};
 #[derive(Clone, Debug)]
 pub struct Timer {
     pub remaining: Duration,
-    pub expected_stop: DateTime<Local>,
-    // pub actual_stop: DateTime<Local>,
+    pub total: Duration,
+    pub actual_finish: DateTime<Local>,
+    // pub actual_finish: DateTime<Local>,
     pub start_moments: Vec<DateTime<Local>>, // moments at which the timer resumes; the first is the start monent
     pub pause_moments: Vec<DateTime<Local>>, // moments at which the timer is paused; the last is the stop moment
     pub paused: bool,
@@ -14,14 +15,13 @@ pub struct Timer {
 impl Timer {
     /// Returns stopwatch reset to zero
     pub fn new(duration: Duration) -> Self {
-        let moment = Local::now();
-        let expected_stop = moment + duration;
         Self {
             remaining: duration,
-            expected_stop,
+            total: duration,
+            actual_finish: Local::now(),
             start_moments: Vec::new(),
             pause_moments: Vec::new(),
-            paused: true, // stopped by default; start by explicitly calling `.resume()`
+            paused: true, // finished by default; start by explicitly calling `.resume()`
         }
     }
 
@@ -47,7 +47,6 @@ impl Timer {
             self.pause();
         }
     }
-    /// Read the total time elapsed
     pub fn read(&self) -> Duration {
         if self.paused {
             self.remaining

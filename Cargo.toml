@@ -1,6 +1,6 @@
 [package]
 name = "clock-cli"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Tianyi Shi <ShiTianyi2001@outlook.com>"]
 edition = "2018"
 documentation = "https://docs.rs/clock-cli"
@@ -13,6 +13,7 @@ description = "Clock utilities (stopwatch, timer) on the command line with TUI (
 cursive = "0.15.0"
 #clap = "2.33.3"
 chrono = "0.4.15"
+humantime = "2.0"
 
 [[bin]]
 name = "clock"

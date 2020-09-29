@@ -16,13 +16,16 @@
 // }
 
 //pub mod countdown;
+mod countdown;
 mod stopwatch;
-use crate::core::stopwatch::StopWatch;
+use crate::core::{countdown::Timer, stopwatch::StopWatch};
 use crate::utils::PrettyDuration;
+use chrono::Duration;
+use countdown::TimerView;
 use cursive::{traits::*, views::Dialog, Cursive};
 use stopwatch::StopWatchView;
 
-pub fn main() {
+pub fn stopwatch() {
     let mut siv = cursive::default();
     let stopwatch = StopWatchView::new();
     siv.add_layer(
@@ -50,4 +53,15 @@ fn summarize(stopwatch: &StopWatch) -> String {
         max.pretty(),
         min.pretty()
     )
+}
+
+pub fn timer(h: u8, m: u8, s: u8) {
+    let mut siv = cursive::default();
+    let timer = TimerView::new(h, m, s);
+    siv.add_layer(
+        timer, // .on_finish(|s: &mut Cursive, timer| s.add_layer(Dialog::info(format!("{:?}", &timer)))),
+    );
+    //siv.set_fps(15);
+    siv.set_autorefresh(true);
+    siv.run();
 }
