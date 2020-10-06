@@ -28,14 +28,13 @@
 use crate::utils::PrettyDuration;
 // use chrono::{DateTime, Duration, Local};
 use chrono::Duration;
-use clock_core::timer::Timer;
+use clock_core::timer::{Timer, TimerData};
 use cursive::{
     event::{Callback, Event, EventResult, Key, MouseEvent},
     theme::ColorStyle,
     view::View,
     Cursive, Printer, Vec2, With,
 };
-use std::cell::RefCell;
 use std::rc::Rc;
 
 #[derive(Copy, Clone)]
@@ -58,7 +57,7 @@ pub struct TimerView {
     remaining: Duration,
     state: TimerViewState,
     config: TimerViewConfig,
-    on_finish: Option<Rc<dyn Fn(&mut Cursive, Timer)>>,
+    on_finish: Option<Rc<dyn Fn(&mut Cursive, TimerData)>>,
 }
 
 impl TimerView {
@@ -94,7 +93,7 @@ impl TimerView {
     /// See also cursive::views::select_view::SelectView::set_on_submit
     pub fn set_on_finish<F, R>(&mut self, cb: F)
     where
-        F: 'static + Fn(&mut Cursive, Timer) -> R,
+        F: 'static + Fn(&mut Cursive, TimerData) -> R,
     {
         self.on_finish = Some(Rc::new(move |s, t| {
             cb(s, t);
@@ -103,21 +102,17 @@ impl TimerView {
 
     pub fn on_finish<F, R>(self, cb: F) -> Self
     where
-        F: 'static + Fn(&mut Cursive, Timer) -> R,
+        F: 'static + Fn(&mut Cursive, TimerData) -> R,
     {
         self.with(|s| s.set_on_finish(cb))
     }
 
     fn finish(&mut self) -> EventResult {
         self.state = TimerViewState::Finished;
-        let duration = self.timer.total;
-        let timer = self.timer.clone();
-        self.timer = Timer::new(duration);
-        // TODO: remove clone
-        // let timer = std::mem::replace(&mut self.timer, RefCell::new(Timer::new(duration))); // reset the timer data, but not other configurations related to the `View`
+        let data = self.timer.stop();
         if self.on_finish.is_some() {
             let cb = self.on_finish.clone().unwrap();
-            EventResult::Consumed(Some(Callback::from_fn_once(move |s| cb(s, timer))))
+            EventResult::Consumed(Some(Callback::from_fn_once(move |s| cb(s, data))))
         } else {
             EventResult::Consumed(None)
         }
@@ -242,7 +237,7 @@ impl View for TimerView {
                         return self.finish();
                     }
                     _ => {
-                        if self.timer.remaining.num_milliseconds() < 10 {
+                        if self.timer.data.remaining.num_milliseconds() < 10 {
                             self.state = TimerViewState::Finished;
                             return self.finish();
                         }

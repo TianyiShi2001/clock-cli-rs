@@ -15,16 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with clock-cli-rs.  If not, see <http://www.gnu.org/licenses/>.
 
-mod countdown;
 mod stopwatch;
-use crate::utils::PrettyDuration;
+mod timer;
+use crate::{notify::notify, utils::PrettyDuration};
 use clock_core::{
     stopwatch::{Stopwatch, StopwatchData},
-    timer::Timer,
+    timer::{Timer, TimerData},
 };
-use countdown::TimerView;
 use cursive::{traits::*, views::Dialog, Cursive};
 use stopwatch::StopwatchView;
+use timer::TimerView;
 
 pub fn stopwatch() {
     let mut siv = cursive::default();
@@ -53,12 +53,31 @@ fn summarize(stopwatch: &StopwatchData) -> String {
     )
 }
 
+fn timer_on_finish(data: TimerData) {
+    let expected_duration = data.duration_expected().pretty_s();
+    let actual_duration = data.duration_actual().pretty_s();
+    let msg = &format!(
+        "Expected: {}\nActual: {}",
+        &expected_duration, &actual_duration,
+    );
+
+    notify(msg).unwrap();
+
+    match notify(msg) {
+        Ok(_) => {}
+        Err(_) => {}
+    }
+}
+
+#[allow(dead_code)]
+fn timer_on_finish_debug(s: &mut Cursive, data: TimerData) {
+    s.add_layer(Dialog::info(format!("{:?}", data)));
+}
+
 pub fn timer(h: u8, m: u8, s: u8) {
     let mut siv = cursive::default();
     let timer = TimerView::new(h, m, s);
-    siv.add_layer(
-        timer, // .on_finish(|s: &mut Cursive, timer| s.add_layer(Dialog::info(format!("{:?}", &timer)))),
-    );
+    siv.add_layer(timer.on_finish(|s: &mut Cursive, timer| timer_on_finish(timer)));
     //siv.set_fps(15);
     siv.set_autorefresh(true);
     siv.run();

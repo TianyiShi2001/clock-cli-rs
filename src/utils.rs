@@ -17,8 +17,11 @@
 
 use chrono::Duration;
 
+pub type BoxedError = Box<dyn std::error::Error>;
+
 pub trait PrettyDuration {
     fn pretty(&self) -> String;
+    fn pretty_s(&self) -> String;
 }
 impl PrettyDuration for Duration {
     /// Pretty-prints a chrono::Duration in the form `HH:MM:SS.xxx`
@@ -28,5 +31,17 @@ impl PrettyDuration for Duration {
         let (h, s) = (s / 3600, s % 3600);
         let (m, s) = (s / 60, s % 60);
         format!("{:02}:{:02}:{:02}.{:03}", h, m, s, ms)
+    }
+
+    /// Pretty-prints a chrono::Duration in the form `HH:MM:SS.xxx`
+    fn pretty_s(&self) -> String {
+        let mut s = self.num_seconds();
+        let ms = self.num_milliseconds() - 1000 * s;
+        if ms > 500 {
+            s += 1;
+        }
+        let (h, s) = (s / 3600, s % 3600);
+        let (m, s) = (s / 60, s % 60);
+        format!("{:02}:{:02}:{:02}", h, m, s)
     }
 }

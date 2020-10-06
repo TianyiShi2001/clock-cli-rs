@@ -1,6 +1,6 @@
 [package]
 name = "clock-cli"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Tianyi Shi <ShiTianyi2001@outlook.com>"]
 edition = "2018"
 documentation = "https://docs.rs/clock-cli"
@@ -15,7 +15,8 @@ cursive = "0.15.0"
 chrono = "0.4.15"
 humantime = "2.0"
 # rodio = { git = "https://github.com/RustAudio/rodio"}
-clock-core = "0.0.4"
+clock-core = "0.0.6"
+notify-rust = "4"
 
 [[bin]]
 name = "clock"
