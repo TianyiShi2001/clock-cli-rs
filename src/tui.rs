@@ -23,8 +23,8 @@ use clock_core::{
     timer::{Timer, TimerData},
 };
 use cursive::{traits::*, views::Dialog, Cursive};
-use stopwatch::StopwatchView;
-use timer::TimerView;
+pub use stopwatch::StopwatchView;
+pub use timer::TimerView;
 
 pub fn stopwatch() {
     let mut siv = cursive::default();

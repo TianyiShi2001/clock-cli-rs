@@ -6,7 +6,7 @@ pub fn notify(msg: &str) -> Result<(), BoxedError> {
     Notification::new()
         .summary("Clock")
         .body(msg)
-        .icon("firefox")
+        .icon("clock")
         .show()?;
     Ok(())
 }
