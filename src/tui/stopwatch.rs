@@ -116,6 +116,7 @@ impl View for StopwatchView {
                 self.stopwatch.pause_or_resume();
             }
             Event::Key(Key::Enter) => {
+                self.show_laps_offset = 0; // FUTURE: maybe unneeded?
                 return self.stop();
             }
             Event::Char('l') => {

@@ -1,4 +1,10 @@
-## 0.1.0 2010-10-11
+## 0.1.0 2010-10-10
+
+### Bugfix
+
+Fix the issue that, when `show_lap_offset` is not zero, ugly output of the stopwatch was produced upon stopping.
+
+## 0.1.0 2010-10-10
 
 ### New Features
 
