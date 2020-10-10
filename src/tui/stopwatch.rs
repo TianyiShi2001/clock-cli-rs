@@ -19,25 +19,23 @@ use crate::utils::PrettyDuration;
 // use chrono::{DateTime, Duration, Local};
 use clock_core::stopwatch::{Stopwatch, StopwatchData};
 use cursive::{
-    event::{Callback, Event, EventResult, Key},
+    event::{Callback, Event, EventResult, Key, MouseEvent},
     view::View,
     Cursive, Printer, Vec2, With,
 };
 use std::rc::Rc;
 
+#[derive(Default)]
 pub struct StopwatchView {
     stopwatch: Stopwatch,
     on_stop: Option<Rc<dyn Fn(&mut Cursive, StopwatchData)>>,
     show_laps: usize,
+    show_laps_offset: usize,
 }
 
 impl StopwatchView {
     pub fn new() -> Self {
-        Self {
-            stopwatch: Stopwatch::new(),
-            on_stop: None,
-            show_laps: 0,
-        }
+        Self::default()
     }
 
     pub fn with_laps(mut self, n: usize) -> Self {
@@ -70,12 +68,28 @@ impl StopwatchView {
             EventResult::Consumed(None)
         }
     }
+
+    fn increment_show_lap_offset(&mut self) {
+        if self.stopwatch.data.laps.len() > self.show_laps + self.show_laps_offset {
+            self.show_laps_offset += 1;
+        }
+    }
+
+    fn decrement_show_lap_offset(&mut self) {
+        if self.show_laps_offset > 0 {
+            self.show_laps_offset -= 1;
+        }
+    }
 }
 impl View for StopwatchView {
     fn draw(&self, printer: &Printer) {
         printer.print((4, 0), &self.stopwatch.read().pretty());
-        let len = self.stopwatch.data.laps.len();
-        for i in 1..=std::cmp::min(len, self.show_laps) {
+
+        let len = self.stopwatch.data.laps.len() - self.show_laps_offset;
+        let mut i = 0;
+        while i < std::cmp::min(len, self.show_laps) {
+            i += 1;
+
             printer.print(
                 (0, i),
                 &[
@@ -84,6 +98,9 @@ impl View for StopwatchView {
                 ]
                 .concat(),
             );
+        }
+        if len != i {
+            printer.print((0, self.show_laps), ":                           ");
         }
     }
 
@@ -103,6 +120,25 @@ impl View for StopwatchView {
             }
             Event::Char('l') => {
                 self.stopwatch.lap();
+                self.show_laps_offset = 0;
+            }
+            Event::Key(Key::Up) => {
+                self.decrement_show_lap_offset();
+            }
+            Event::Key(Key::Down) => {
+                self.increment_show_lap_offset();
+            }
+            Event::Mouse { event, .. } => {
+                match event {
+                    MouseEvent::WheelUp => {
+                        self.decrement_show_lap_offset();
+                    }
+                    MouseEvent::WheelDown => {
+                        self.increment_show_lap_offset();
+                    }
+                    _ => return EventResult::Ignored,
+                }
+                return EventResult::Consumed(None);
             }
             _ => return EventResult::Ignored,
         }

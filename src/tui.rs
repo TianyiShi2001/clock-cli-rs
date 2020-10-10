@@ -18,10 +18,7 @@
 mod stopwatch;
 mod timer;
 use crate::{notify::notify, utils::PrettyDuration};
-use clock_core::{
-    stopwatch::{Stopwatch, StopwatchData},
-    timer::{Timer, TimerData},
-};
+use clock_core::{stopwatch::StopwatchData, timer::TimerData};
 use cursive::{traits::*, views::Dialog, Cursive};
 pub use stopwatch::StopwatchView;
 pub use timer::TimerView;
@@ -77,7 +74,7 @@ fn timer_on_finish_debug(s: &mut Cursive, data: TimerData) {
 pub fn timer(h: u8, m: u8, s: u8) {
     let mut siv = cursive::default();
     let timer = TimerView::new(h, m, s);
-    siv.add_layer(timer.on_finish(|s: &mut Cursive, timer| timer_on_finish(timer)));
+    siv.add_layer(timer.on_finish(|_: &mut Cursive, timer| timer_on_finish(timer)));
     //siv.set_fps(15);
     siv.set_autorefresh(true);
     siv.run();

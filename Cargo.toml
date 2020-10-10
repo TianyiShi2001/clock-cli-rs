@@ -1,6 +1,6 @@
 [package]
 name = "clock-cli"
-version = "0.0.7"
+version = "0.1.0"
 authors = ["Tianyi Shi <ShiTianyi2001@outlook.com>"]
 edition = "2018"
 documentation = "https://docs.rs/clock-cli"
@@ -10,13 +10,17 @@ repository = "https://github.com/TianyiShi2001/clock-cli-rs"
 description = "Clock utilities (stopwatch, timer) on the command line with TUI (text user interface)"
 
 [dependencies]
-cursive = "0.15.0"
+cursive = {version = "0.15", default-features = false }
 #clap = "2.33.3"
 chrono = "0.4.15"
 humantime = "2.0"
 # rodio = { git = "https://github.com/RustAudio/rodio"}
 clock-core = "0.0.6"
 notify-rust = "4"
+
+[features]
+default = ["cursive/crossterm-backend"]
+
 
 [[bin]]
 name = "clock"

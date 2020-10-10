@@ -26,7 +26,7 @@ clock
 ```
 
 - Press `Space` to pause/resume.
-- Press `l` to lap.
+- Press `l` to lap. Mouse-scroll or press arrow keys to view more.
 - Press `return` to finish.
 
 ## Countdown Timer:

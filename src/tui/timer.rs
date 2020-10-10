@@ -30,7 +30,7 @@ use crate::utils::PrettyDuration;
 use chrono::Duration;
 use clock_core::timer::{Timer, TimerData};
 use cursive::{
-    event::{Callback, Event, EventResult, Key, MouseEvent},
+    event::{Callback, Event, EventResult, Key},
     theme::ColorStyle,
     view::View,
     Cursive, Printer, Vec2, With,
@@ -155,14 +155,14 @@ impl TimerView {
         }
     }
 
-    fn get_selection(&self) -> u8 {
-        match self.config.focus % 3 {
-            0 => self.config.h,
-            1 => self.config.m,
-            2 => self.config.s,
-            _ => unreachable!(),
-        }
-    }
+    // fn get_selection(&self) -> u8 {
+    //     match self.config.focus % 3 {
+    //         0 => self.config.h,
+    //         1 => self.config.m,
+    //         2 => self.config.s,
+    //         _ => unreachable!(),
+    //     }
+    // }
 
     fn set_selection(&mut self, v: u8) {
         match self.config.focus % 3 {
