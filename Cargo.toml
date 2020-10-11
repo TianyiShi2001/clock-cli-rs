@@ -17,6 +17,7 @@ humantime = "2.0"
 # rodio = { git = "https://github.com/RustAudio/rodio"}
 clock-core = "0.0.6"
 notify-rust = "4"
+hhmmss = "0.1"
 
 [features]
 default = ["cursive/crossterm-backend"]

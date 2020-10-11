@@ -17,9 +17,10 @@
 
 mod stopwatch;
 mod timer;
-use crate::{notify::notify, utils::PrettyDuration};
+use crate::notify::notify;
 use clock_core::{stopwatch::StopwatchData, timer::TimerData};
 use cursive::{traits::*, views::Dialog, Cursive};
+use hhmmss::Hhmmss;
 pub use stopwatch::StopwatchView;
 pub use timer::TimerView;
 
@@ -43,16 +44,16 @@ fn summarize(stopwatch: &StopwatchData) -> String {
     let min = stopwatch.laps.iter().min().unwrap();
     format!(
         "Elapsed time: {}\nAverage: {}\nMax: {}\nMin: {}",
-        elapsed.pretty(),
-        average.pretty(),
-        max.pretty(),
-        min.pretty()
+        elapsed.hhmmssxxx(),
+        average.hhmmssxxx(),
+        max.hhmmssxxx(),
+        min.hhmmssxxx()
     )
 }
 
 fn timer_on_finish(data: TimerData) {
-    let expected_duration = data.duration_expected().pretty_s();
-    let actual_duration = data.duration_actual().pretty_s();
+    let expected_duration = data.duration_expected().hhmmss();
+    let actual_duration = data.duration_actual().hhmmss();
     let msg = &format!(
         "Expected: {}\nActual: {}",
         &expected_duration, &actual_duration,

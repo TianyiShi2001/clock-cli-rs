@@ -25,8 +25,6 @@
 //!
 //! When the timer finishes (when counting to 00:00:00 or cancelled), the callback set with `on_finish()` is called.
 
-use crate::utils::PrettyDuration;
-// use chrono::{DateTime, Duration, Local};
 use chrono::Duration;
 use clock_core::timer::{Timer, TimerData};
 use cursive::{
@@ -35,6 +33,7 @@ use cursive::{
     view::View,
     Cursive, Printer, Vec2, With,
 };
+use hhmmss::Hhmmss;
 use std::rc::Rc;
 
 #[derive(Copy, Clone)]
@@ -119,7 +118,7 @@ impl TimerView {
     }
 
     fn draw_running(&self, printer: &Printer) {
-        printer.print((0, 0), &self.remaining.pretty());
+        printer.print((0, 0), &self.remaining.hhmmssxxx());
     }
 
     fn draw_finished(&self, printer: &Printer) {

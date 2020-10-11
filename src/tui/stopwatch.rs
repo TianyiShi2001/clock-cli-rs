@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with clock-cli-rs.  If not, see <http://www.gnu.org/licenses/>.
 
-use crate::utils::PrettyDuration;
+use hhmmss::Hhmmss;
 // use chrono::{DateTime, Duration, Local};
 use clock_core::stopwatch::{Stopwatch, StopwatchData};
 use cursive::{
@@ -83,7 +83,7 @@ impl StopwatchView {
 }
 impl View for StopwatchView {
     fn draw(&self, printer: &Printer) {
-        printer.print((4, 0), &self.stopwatch.read().pretty());
+        printer.print((4, 0), &self.stopwatch.read().hhmmssxxx());
 
         let len = self.stopwatch.data.laps.len() - self.show_laps_offset;
         let mut i = 0;
@@ -94,7 +94,7 @@ impl View for StopwatchView {
                 (0, i),
                 &[
                     format!("Lap {:02}: ", len - i + 1),
-                    self.stopwatch.data.laps[len - i].pretty(),
+                    self.stopwatch.data.laps[len - i].hhmmssxxx(),
                 ]
                 .concat(),
             );
