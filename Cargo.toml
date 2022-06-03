@@ -10,13 +10,13 @@ repository = "https://github.com/TianyiShi2001/clock-cli-rs"
 description = "Clock utilities (stopwatch, timer) on the command line with TUI (text user interface)"
 
 [dependencies]
-cursive = { version = "0.16.3", default-features = false }
+cursive = { version = "0.17.0", default-features = false }
 #clap = "2.33.3"
 chrono = "0.4.19"
 humantime = "2.1.0"
 # rodio = { git = "https://github.com/RustAudio/rodio"}
 clock-core = "0.0.7"
-notify-rust = "4.5.2"
+notify-rust = "4.5.8"
 hhmmss = "0.1.0"
 
 [features]

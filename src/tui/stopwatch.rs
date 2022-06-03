@@ -115,9 +115,19 @@ impl View for StopwatchView {
             Event::Char(' ') => {
                 self.stopwatch.pause_or_resume();
             }
-            Event::Key(Key::Enter) | Event::Char('q') | Event::Key(Key::Backspace) => {
+            Event::Char('c') => {
+            }
+            Event::Char('q') | Event::Key(Key::Backspace) => {
                 self.show_laps_offset = 0; // FUTURE: maybe unneeded?
                 return self.stop();
+            }
+            Event::Key(Key::Enter) => {
+                self.show_laps_offset = 0; // FUTURE: maybe unneeded?
+                if self.stopwatch.paused && self.stopwatch.data.elapsed.is_zero() {
+                    return EventResult::Ignored;
+                } else {
+                    return self.stop();
+                }
             }
             Event::Char('l') => {
                 self.stopwatch.lap();
