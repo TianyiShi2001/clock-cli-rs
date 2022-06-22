@@ -19,7 +19,7 @@ mod stopwatch;
 mod timer;
 use crate::notify::notify;
 use clock_core::{stopwatch::StopwatchData, timer::TimerData};
-use cursive::{traits::*, views::Dialog, Cursive};
+use cursive::{traits::*, views::Dialog, Cursive, event::{Event, Key}};
 use hhmmss::Hhmmss;
 pub use stopwatch::StopwatchView;
 pub use timer::TimerView;
@@ -30,10 +30,15 @@ pub fn stopwatch() {
     siv.add_layer(
         stopwatch
             .with_laps(8)
-            .on_stop(|s: &mut Cursive, stopwatch| s.add_layer(Dialog::info(summarize(&stopwatch))))
+            .on_stop(|s: &mut Cursive, stopwatch| s.add_layer({
+                let mut d = Dialog::info(summarize(&stopwatch));
+                d.buttons_mut().next().unwrap().on_event(Event::Char(' '));
+                d
+            }))
             .with_name("stopwatch"),
     );
     siv.set_fps(15);
+    siv.add_global_callback(Event::Key(Key::Enter), |_| {});
     siv.run();
 }
 
